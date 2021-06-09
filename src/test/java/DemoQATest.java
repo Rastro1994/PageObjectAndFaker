@@ -1,15 +1,10 @@
 import com.github.javafaker.Faker;
 import org.junit.jupiter.api.Test;
 
-import java.io.File;
-
-import static com.codeborne.selenide.Condition.text;
-import static com.codeborne.selenide.Selectors.byText;
-import static com.codeborne.selenide.Selenide.*;
-
-public class DemoQATest extends TestBase{
+public class DemoQATest extends TestBase {
     Faker faker = new Faker();
     String firstName = faker.name().firstName(),
+            url = "https://demoqa.com/automation-practice-form",
             lastName = faker.name().lastName(),
             email = faker.internet().emailAddress(),
             gender = "Male",
@@ -20,45 +15,29 @@ public class DemoQATest extends TestBase{
             subject = "English",
             hobbie = "Sports",
             picture = "3123123.jpg",
-            address = faker.address().fullAddress();
+            address = faker.address().fullAddress(),
+            state = "NCR",
+            city = "Noida";
 
 
     @Test
     void fillFormTest() {
-        open("https://demoqa.com/automation-practice-form");
-        $("#firstName").setValue(firstName);
-        $("#lastName").setValue(lastName);
-        $("#userEmail").setValue(email);
-        $(byText(gender)).click();
-        $("#userNumber").setValue(number);
-        $("#dateOfBirthInput").click();
-        $(".react-datepicker__month-select").selectOption(month);
-        $(".react-datepicker__year-select").selectOption(year);
-        $(".react-datepicker__day--028").click();
-        $("#subjectsInput").setValue(subject);
-        $("#react-select-2-option-0").click();
-        $(byText(hobbie)).click();
-        $("#uploadPicture").uploadFile(new File("src/test/resources/" + picture));
-        $("#currentAddress").setValue(address);
-        $("#currentAddress").scrollTo();
-        $("#state").click();
-        $("#react-select-3-option-0").click();
-        $("#city").click();
-        $("#react-select-4-option-0").click();
-        $("#submit").click();
-        $(".modal-content").shouldHave(
-                text(firstName),
-                text(lastName),
-                text(email),
-                text(number),
-                text(address),
-                text(month),
-                text(year),
-                text(day),
-                text(subject),
-                text(hobbie),
-                text(picture),
-                text(address));
+
+        PageObjects.openPage(url);
+        PageObjects.setFirstName(firstName);
+        PageObjects.setLastName(lastName);
+        PageObjects.setEmail(email);
+        PageObjects.setGender(gender);
+        PageObjects.setPhoneNumber(number);
+        PageObjects.setBirthDate(year, month, day);
+        PageObjects.setSubjects(subject);
+        PageObjects.setHobbies(hobbie);
+        PageObjects.uploadFile(picture);
+        PageObjects.setAddress(address);
+        PageObjects.chooseState(state);
+        PageObjects.chooseCity(city);
+        PageObjects.clickSubmit();
+        PageObjects.checkData(firstName, lastName, email, gender, number, year, month, day, subject, hobbie, picture);
 
     }
 }

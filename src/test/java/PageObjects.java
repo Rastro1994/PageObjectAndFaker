@@ -83,4 +83,4 @@ public class PageObjects {
                         text(city),
                         text(state));
     }
-}
+    }
